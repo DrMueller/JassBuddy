@@ -4,7 +4,7 @@
 
     public record OrcRecognitionLine(IReadOnlyCollection<OrcRecognitionWord> Words);
 
-    public record OrcRecognitionRegion(IReadOnlyCollection<OrcRecognitionLine> Lines);
+    public record OrcRecognitionBlock(IReadOnlyCollection<OrcRecognitionLine> Lines);
 
-    public record OcrRecognitionResult(IReadOnlyCollection<OrcRecognitionRegion> Regions);
+    public record OcrRecognitionResult(IReadOnlyCollection<OrcRecognitionBlock> Blocks);
 }

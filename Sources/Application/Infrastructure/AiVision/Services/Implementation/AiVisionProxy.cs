@@ -1,6 +1,6 @@
-﻿using JetBrains.Annotations;
-using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
-using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
+﻿using Azure;
+using Azure.AI.Vision.ImageAnalysis;
+using JetBrains.Annotations;
 using Mmu.JassBuddy2.Infrastructure.AiVision.Models;
 using Mmu.JassBuddy2.Infrastructure.Settings.Provisioning.Services;
 
@@ -13,44 +13,26 @@ namespace Mmu.JassBuddy2.Infrastructure.AiVision.Services.Implementation
 
         public async Task<OcrRecognitionResult> RecognizeAsync(Stream stream)
         {
-            var client =
-                new ComputerVisionClient(new ApiKeyServiceClientCredentials(
-                        _settingsProvider.AppSettings.ComputerVisionApiKey))
-                    { Endpoint = _settingsProvider.AppSettings.ComputerVisionEndpoint };
+            var settings = _settingsProvider.AppSettings;
 
-            var readResult = await client.ReadInStreamAsync(stream);
-            var operationLocation = readResult.OperationLocation;
-            Thread.Sleep(2000);
+            var client = new ImageAnalysisClient(
+                new Uri(settings.ComputerVisionEndpoint),
+                new AzureKeyCredential(settings.ComputerVisionApiKey));
 
-            const int numberOfCharsInOperationId = 36;
-            var operationId = operationLocation.Substring(operationLocation.Length - numberOfCharsInOperationId);
+            var binaryData = await BinaryData.FromStreamAsync(stream);
 
-            ReadOperationResult results;
-            do
-            {
-                results = await client.GetReadResultAsync(Guid.Parse(operationId));
-            }
-            while (results.Status == OperationStatusCodes.Running ||
-                   results.Status == OperationStatusCodes.NotStarted);
+            ImageAnalysisResult result = await client.AnalyzeAsync(
+                binaryData,
+                VisualFeatures.Read);
 
-            var textUrlFileResults = results.AnalyzeResult.ReadResults;
-            foreach (var page in textUrlFileResults)
-            {
-                foreach (var line in page.Lines)
-                {
-                    Console.WriteLine(line.Text);
-                }
-            }
+            var res = result.Read.Blocks
+                .Select(f => new OrcRecognitionBlock
+                (f.Lines.Select(g => new OrcRecognitionLine(g.Words
+                    .Select(h => new OrcRecognitionWord(h.Text))
+                    .ToList())).ToList()))
+                .ToList();
 
-            var res = results.AnalyzeResult.ReadResults
-                .Select(f => new OrcRecognitionRegion(
-                    f.Lines.Select(g => new OrcRecognitionLine(g.Words
-                        .Select(h => new OrcRecognitionWord(h.Text)).ToList()
-                        .ToList())).ToList())).ToList();
-
-            var result = new OcrRecognitionResult(res);
-
-            return result;
+            return new OcrRecognitionResult(res);
         }
     }
 }
