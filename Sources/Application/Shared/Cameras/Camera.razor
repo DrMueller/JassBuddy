@@ -1,0 +1,30 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@rendermode RenderMode.InteractiveServer
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <video id="videoElement" autoplay></video>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <canvas id="canvasElement"></canvas>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <button @onclick="StartCameraAsync">
+                Kamera starten
+            </button>
+
+            <button @onclick="TakePictureAsync">
+                Bild aufnehmen
+            </button>
+
+        </div>
+    </div>
+
+</div>

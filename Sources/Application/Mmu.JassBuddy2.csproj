@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>57ba9ebb-7423-4644-b69e-32ffb9a272e3</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Infrastructure\AiVision\NewFolder\**" />
+    <Content Remove="Infrastructure\AiVision\NewFolder\**" />
+    <EmbeddedResource Remove="Infrastructure\AiVision\NewFolder\**" />
+    <None Remove="Infrastructure\AiVision\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
+    <PackageReference Include="Lamar" Version="14.0.1" />
+    <PackageReference Include="Lamar.Microsoft.DependencyInjection" Version="14.0.1" />
+    <PackageReference Include="Microsoft.Azure.CognitiveServices.Vision.ComputerVision" Version="7.0.1" />
+  </ItemGroup>
+
+</Project>

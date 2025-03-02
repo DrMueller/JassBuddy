@@ -1,0 +1,41 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@using Mmu.JassBuddy2.Shared.Cameras
+@attribute [Route(Path)]
+@rendermode RenderMode.InteractiveServer
+
+<button @onclick="() => ShowCamera = !ShowCamera">
+    Show Camera
+</button>
+
+
+@if (ShowCamera)
+{
+    <Camera OnPictureTaken="HandlePictureAsync"></Camera>
+}
+
+<button @onclick="AnalyzeAsync">
+    Analysieren
+</button>
+
+@if (OcrResult != null)
+{
+    <table>
+        <tbody>
+        @foreach (var linie in OcrResult.Regions.SelectMany(f => f.Lines))
+        {
+            foreach (var word in linie.Words)
+            {
+                <td>@word</td>
+            }
+        }
+
+
+        </tbody>
+    </table>
+}
+
+@* 
+@if (CoiffeurBlatt != null)
+{
+    <CoiffeurBlattDisplay Blatt="@CoiffeurBlatt"></CoiffeurBlattDisplay>
+} *@

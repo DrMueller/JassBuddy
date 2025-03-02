@@ -1,0 +1,55 @@
+﻿<div class="results-container">
+    <h2>Jass Coiffeur Results</h2>
+    <table>
+        <thead>
+        <tr>
+            <th></th>
+            <th>@Blatt.Teams.Team1</th>
+            <th>@Blatt.Teams.Team2</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var linie in Blatt.Linien)
+        {
+            <td>@linie.Jass</td>
+            <td>@linie.PunkteTeam1</td>
+            <td>@linie.PunkteTeam2</td>
+        }
+
+        <td>@Blatt.Team1Punkte</td>
+        <td>@Blatt.Team2Punkte</td>
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .results-container {
+        max-width: 600px;
+        margin: auto;
+        text-align: center;
+        font-family: Arial, sans-serif;
+    }
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    th {
+        background-color: #f4f4f4;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-color: #ddd;
+    }
+</style>
